@@ -113,52 +113,52 @@ export default function Footer() {
         }
         </div>
         <div id='Fim' className='w-100'>
-        <div className="container">
-            <div className="py-5">
-                <div className="row">
-                <div className="col-6 col-md-2 mb-3">
-                    <h5>Sobre</h5>
-                    <ul className="nav flex-column">
-                    <ListaDeCoisas lista={SobreOBanestes}/>
-                    </ul>
-                </div>
-
-                <div className="col-6 col-md-2 mb-3">
-                    <h5>Tecnologias</h5>
-                    <ul className="nav flex-column">
-                    <ListaDeCoisas lista={Tecnologias}/>
-                    </ul>
-                </div>
-
-                <div className="col-6 col-md-2 mb-3">
-                    <h5>Contato</h5>
-                    <ul className="nav flex-column">
-                    <ListaDeCoisas lista={Atendimento}/>
-                    </ul>
-                </div>
-
-                <div className="col-md-5 offset-md-1 mb-3">
-                    <form>
-                    <h5>Nos mande sua opinião!</h5>
-                    <p>Sua opinião tambem é relevante!</p>
-                    <div className="d-flex flex-column flex-sm-row w-100 gap-2">
-                        <label htmlFor="newsletter1" className="visually-hidden">Digite Aqui!</label>
-                        <input id="newsletter1" type="text" className="form-control" placeholder="Digite Aqui!"/>
-                        <button className="btn btn-primary" type="button">Enviar</button>
+            <div className="container">
+                <div className="py-5">
+                    <div className="row">
+                    <div className="col-6 col-md-2 mb-3">
+                        <h5>Sobre</h5>
+                        <ul className="nav flex-column">
+                        <ListaDeCoisas lista={SobreOBanestes}/>
+                        </ul>
                     </div>
-                    </form>
-                </div>
-                </div>
 
-                <div className="d-flex d flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
-                <p>&copy; Banestes 2019 e Matheus Endlich Silveira . Todos os direitos reservados.</p>
-                <ul className="list-unstyled d-flex">
-                <li className="ms-3"><a className="link-body-emphasis" href="https://www.youtube.com/BanestesTV"><i className="bi bi-youtube"/></a></li>
-                <li className="ms-3"><a className="link-body-emphasis" href="https://www.instagram.com/banestes_sa/"><i className="bi bi-instagram"/></a></li>
-                <li className="ms-3"><a className="link-body-emphasis" href="https://www.linkedin.com/company/banestesoficial/"><i className="bi bi-linkedin"/></a></li>
-                </ul>
+                    <div className="col-6 col-md-2 mb-3">
+                        <h5>Tecnologias</h5>
+                        <ul className="nav flex-column">
+                        <ListaDeCoisas lista={Tecnologias}/>
+                        </ul>
+                    </div>
+
+                    <div className="col-6 col-md-2 mb-3">
+                        <h5>Contato</h5>
+                        <ul className="nav flex-column">
+                        <ListaDeCoisas lista={Atendimento}/>
+                        </ul>
+                    </div>
+
+                    <div className="col-md-5 offset-md-1 mb-3">
+                        <form>
+                        <h5>Nos mande sua opinião!</h5>
+                        <p>Sua opinião tambem é relevante!</p>
+                        <div className="d-flex flex-column flex-sm-row w-100 gap-2">
+                            <label htmlFor="newsletter1" className="visually-hidden">Digite Aqui!</label>
+                            <input id="newsletter1" type="text" className="form-control" placeholder="Digite Aqui!"/>
+                            <button className="btn btn-primary" type="button">Enviar</button>
+                        </div>
+                        </form>
+                    </div>
+                    </div>
+
+                    <div className="d-flex d flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+                    <p>&copy; Banestes 2019 e Matheus Endlich Silveira . Todos os direitos reservados.</p>
+                    <ul className="list-unstyled d-flex">
+                    <li className="ms-3"><a className="link-body-emphasis" href="https://www.youtube.com/BanestesTV"><i className="bi bi-youtube"/></a></li>
+                    <li className="ms-3"><a className="link-body-emphasis" href="https://www.instagram.com/banestes_sa/"><i className="bi bi-instagram"/></a></li>
+                    <li className="ms-3"><a className="link-body-emphasis" href="https://www.linkedin.com/company/banestesoficial/"><i className="bi bi-linkedin"/></a></li>
+                    </ul>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
     </footer>

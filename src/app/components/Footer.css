@@ -1,10 +1,10 @@
 footer{
-   height: 60vh;
+   height: 50vh;
    background-color: #fafafa;
 }
 
 #Fim{
-    height: 70%;
+    height: 50%;
     background-color: #fafafa;
 }
 
@@ -54,19 +54,33 @@ footer{
     border-left: 0;
 }
 
-@media screen and (max-width: 770px) {
+@media screen and (max-width: 1400px) {
 
     footer{
-        height: 115vh;
-        background-color: #fafafa;
+        height: 60vh;
     }
 }
+
+
+@media screen and (max-width: 770px) and (min-height: 825px) {
+    footer {
+      height: 80vh !important;
+    }
+}
+
+
+@media screen and (max-width: 770px)  {
+
+    footer{
+        height: 115vh !important;
+    }
+}
+
 
 @media screen and (max-width: 550px) {
 
     footer{
-        height: 140vh;
-        background-color: #fafafa;
+        height: 140vh !important;
     }
 
     .py-5{
@@ -76,6 +90,49 @@ footer{
 
     #divlist{
         height: 28%;
+    }
+
+    .list-group{
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .list-group-item{
+        text-align: center;
+        padding-bottom: 0%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        background-color: #e9e9e9;
+        width: 100%;
+        border-right: 0;
+        border-left: 0;
+        border-bottom: var(--bs-list-group-border-width) solid var(--bs-list-group-border-color) !important;
+        border-radius: 0px !important;
+    }
+    
+    #UltimoItem{
+        border-bottom: 0 !important;
+    }
+
+}
+
+@media screen and (max-width: 550px) and (min-height: 825px)  {
+
+    footer{
+        height: 100vh !important;
+    }
+
+    .py-5{
+        padding-top: 0rem !important;
+        padding-bottom: 0% !important;
+    }
+
+    #divlist{
+        height: 38%;
     }
 
     .list-group{
