@@ -131,7 +131,7 @@ export default function Footer() {
                 </div>
 
                 <div className="col-6 col-md-2 mb-3">
-                    <h5>Section</h5>
+                    <h5>Contato</h5>
                     <ul className="nav flex-column">
                     <ListaDeCoisas lista={Atendimento}/>
                     </ul>
@@ -142,8 +142,8 @@ export default function Footer() {
                     <h5>Nos mande sua opinião!</h5>
                     <p>Sua opinião tambem é relevante!</p>
                     <div className="d-flex flex-column flex-sm-row w-100 gap-2">
-                        <label htmlFor="newsletter1" className="visually-hidden">Email address</label>
-                        <input id="newsletter1" type="text" className="form-control" placeholder="Email address"/>
+                        <label htmlFor="newsletter1" className="visually-hidden">Digite Aqui!</label>
+                        <input id="newsletter1" type="text" className="form-control" placeholder="Digite Aqui!"/>
                         <button className="btn btn-primary" type="button">Enviar</button>
                     </div>
                     </form>

@@ -57,7 +57,7 @@ footer{
 @media screen and (max-width: 770px) {
 
     footer{
-        height: 140vh;
+        height: 115vh;
         background-color: #fafafa;
     }
 }
@@ -70,12 +70,12 @@ footer{
     }
 
     .py-5{
-        padding-top: 0% !important;
+        padding-top: 0rem !important;
         padding-bottom: 0% !important;
     }
 
     #divlist{
-        height: 35%;
+        height: 28%;
     }
 
     .list-group{

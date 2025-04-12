@@ -20,7 +20,7 @@ export default function Homepage(){
     return(<>
             <div id="Pesquisador" className="d-flex justify-content-end align-items-center">
                 <div id="boxConteiner" className='d-flex justify-content-center  align-items-center'>
-                    <InputGroup className="mb-3">
+                    <InputGroup className="mb-3 p-3">
                         <DropdownButton
                         variant="outline-secondary"
                         title={`${filtrador}`}

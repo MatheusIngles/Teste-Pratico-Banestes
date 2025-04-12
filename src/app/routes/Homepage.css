@@ -7,6 +7,10 @@
     padding-top: 0% !important;
 }
 
+.input-group{
+    padding-bottom: 0% !important;
+}
+
 #boxConteiner{
     width: 100%;
     height: 70%;
