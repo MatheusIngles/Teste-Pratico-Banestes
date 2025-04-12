@@ -10,7 +10,7 @@ export default function Footer() {
         Nome: string
     }
 
-    const Links: Array<ObjectLink> = [{link:"https://getbootstrap.com/",Nome:"Bootstrap"},{link:"https://react.dev/", Nome:"React"},{link:"https://www.typescriptlang.org/",Nome:"TypeScript"}]
+    const Tecnologias: Array<ObjectLink> = [{link:"https://getbootstrap.com/",Nome:"Bootstrap"},{link:"https://react.dev/", Nome:"React"},{link:"https://www.typescriptlang.org/",Nome:"TypeScript"}]
     const SobreOBanestes: Array<ObjectLink> = [{link:"https://www.banestes.com.br/institucional/index_companhia.html",Nome:"A Companhia"},
                                                 {link:"https://www.banestes.com.br/publicacoes_legais/index.html", Nome:"Editais"},
                                                 {link:"https://www.banestes.com.br/seguranca/index_seguranca.htm",Nome:"Sua Segurança"},
@@ -31,6 +31,27 @@ export default function Footer() {
           window.removeEventListener('resize', handleResize); 
         };
       }, []);
+
+
+      const ListaDeCoisas = ({ lista }: {lista: Array<ObjectLink>}) => {
+        try {
+            return (
+                <>
+                    {lista.map((link, index) => (
+                        <li key={index} className="nav-item mb-2">
+                            <a href={link.link} className="nav-link p-0 text-body-secondary">
+                                {link.Nome}
+                            </a>
+                        </li>
+                    ))}
+                </>
+            );
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+       };
+    
 
     return (
     <footer className='w-100'>
@@ -98,39 +119,21 @@ export default function Footer() {
                 <div className="col-6 col-md-2 mb-3">
                     <h5>Sobre</h5>
                     <ul className="nav flex-column">
-                    {SobreOBanestes.map((link) => (
-                    <li className="nav-item mb-2">
-                        <a href={link.link} className="nav-link p-0 text-body-secondary">
-                        {link.Nome}
-                        </a>
-                    </li>
-                    ))}
+                    <ListaDeCoisas lista={SobreOBanestes}/>
                     </ul>
                 </div>
 
                 <div className="col-6 col-md-2 mb-3">
                     <h5>Tecnologias</h5>
                     <ul className="nav flex-column">
-                    {Links.map((link) => (
-                    <li className="nav-item mb-2">
-                        <a href={link.link} className="nav-link p-0 text-body-secondary">
-                        {link.Nome}
-                        </a>
-                    </li>
-                    ))}
+                    <ListaDeCoisas lista={Tecnologias}/>
                     </ul>
                 </div>
 
                 <div className="col-6 col-md-2 mb-3">
                     <h5>Section</h5>
                     <ul className="nav flex-column">
-                    {Atendimento.map((link) => (
-                    <li className="nav-item mb-2">
-                        <a href={link.link} className="nav-link p-0 text-body-secondary">
-                        {link.Nome}
-                        </a>
-                    </li>
-                    ))}
+                    <ListaDeCoisas lista={Atendimento}/>
                     </ul>
                 </div>
 
