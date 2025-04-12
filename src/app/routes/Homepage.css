@@ -3,9 +3,13 @@
     height: 100%;
 }
 
+.p-t{
+    padding-top: 0% !important;
+}
+
 #boxConteiner{
     width: 100%;
     height: 70%;
-    
+    flex-direction: column;
     border-right: 1px groove #004b8c ;
 }

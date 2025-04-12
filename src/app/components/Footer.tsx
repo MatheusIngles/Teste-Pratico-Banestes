@@ -37,8 +37,8 @@ export default function Footer() {
         try {
             return (
                 <>
-                    {lista.map((link, index) => (
-                        <li key={index} className="nav-item mb-2">
+                    {lista.map((link) => (
+                        <li className="nav-item mb-2">
                             <a href={link.link} className="nav-link p-0 text-body-secondary">
                                 {link.Nome}
                             </a>
