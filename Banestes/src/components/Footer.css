@@ -1,10 +1,10 @@
 footer{
-   height: 40vh;
+   height: 60vh;
    background-color: #fafafa;
 }
 
 #Fim{
-    height: 60%;
+    height: 70%;
     background-color: #fafafa;
 }
 
@@ -12,26 +12,8 @@ footer{
     height: 30%;
 }
 
-#Copyright{
-    height: 10%;
-    background-color: #004b8d;
-}
-
-#Sobre{
+.container{
     height: 100%;
-    width: 20%;
-}
-
-#Sobre h5{
-    justify-content: center;
-    width: 60%;
-    color: #757585;
-}
-
-#Sobre p{
-    width: 60%;
-    text-align: justify;
-    color: #757575;
 }
 
 .ListGrop{
@@ -58,15 +40,37 @@ footer{
     border-right: 0;
 }
 
+.py-5{
+    padding-bottom: 0% !important;
+}
+
+.d{
+    padding-bottom: 0% !important;
+    margin-top: 0% !important;
+}
+
 #PrimeiroItem{
     border-left: 0;
+}
+
+@media screen and (max-width: 770px) {
+
+    footer{
+        height: 140vh;
+        background-color: #fafafa;
+    }
 }
 
 @media screen and (max-width: 550px) {
 
     footer{
-        height: 100vh;
+        height: 140vh;
         background-color: #fafafa;
+    }
+
+    .py-5{
+        padding-top: 0% !important;
+        padding-bottom: 0% !important;
     }
 
     #divlist{

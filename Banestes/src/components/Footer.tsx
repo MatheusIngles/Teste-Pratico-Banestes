@@ -3,7 +3,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import './Footer.css'
 
 export default function Footer() {
-    const[maxw,setmaxw] = useState(window.innerWidth)
+    const[maxw,setmaxw] = useState<number>(window.innerWidth)
 
     type ObjectLink = {
         link: string
@@ -11,6 +11,14 @@ export default function Footer() {
     }
 
     const Links: Array<ObjectLink> = [{link:"https://getbootstrap.com/",Nome:"Bootstrap"},{link:"https://react.dev/", Nome:"React"},{link:"https://www.typescriptlang.org/",Nome:"TypeScript"}]
+    const SobreOBanestes: Array<ObjectLink> = [{link:"https://www.banestes.com.br/institucional/index_companhia.html",Nome:"A Companhia"},
+                                                {link:"https://www.banestes.com.br/publicacoes_legais/index.html", Nome:"Editais"},
+                                                {link:"https://www.banestes.com.br/seguranca/index_seguranca.htm",Nome:"Sua Segurança"},
+                                                {link:"https://www.banestes.com.br/institucional/responsabilidade.html",Nome:"Responsabilidade Social"}]
+    const Atendimento: Array<ObjectLink> = [{link:"https://www.banestes.com.br/#:~:text=Atendimento-,Rede%20de%20Ag%C3%AAncias,-SAC%20e%20Telefones",Nome:"Rede de Agências"},
+                                                    {link:"https://www.banestes.com.br/atendimento/index_telefones.htm", Nome:"SAC e Telefones"},
+                                                    {link:"https://wwws.banestes.com.br/formularios_consultas/atendimento/index_faleconosco.htm",Nome:"Fale Conosco"}]
+    
 
     useEffect(() => {
         const handleResize = () => {
@@ -84,31 +92,71 @@ export default function Footer() {
         }
         </div>
         <div id='Fim' className='w-100'>
-            <div id='Sobre' className='d-flex justify-content-center align-items-center flex-column text-center'>
-                <h5 className='d-flex '>Sobre o Banestes:</h5>
-                <p> O banco capixaba que cresce com você. Seguro, moderno e feito pra quem confia!</p>
+        <div className="container">
+            <div className="py-5">
+                <div className="row">
+                <div className="col-6 col-md-2 mb-3">
+                    <h5>Sobre</h5>
+                    <ul className="nav flex-column">
+                    {SobreOBanestes.map((link) => (
+                    <li className="nav-item mb-2">
+                        <a href={link.link} className="nav-link p-0 text-body-secondary">
+                        {link.Nome}
+                        </a>
+                    </li>
+                    ))}
+                    </ul>
+                </div>
+
+                <div className="col-6 col-md-2 mb-3">
+                    <h5>Tecnologias</h5>
+                    <ul className="nav flex-column">
+                    {Links.map((link) => (
+                    <li className="nav-item mb-2">
+                        <a href={link.link} className="nav-link p-0 text-body-secondary">
+                        {link.Nome}
+                        </a>
+                    </li>
+                    ))}
+                    </ul>
+                </div>
+
+                <div className="col-6 col-md-2 mb-3">
+                    <h5>Section</h5>
+                    <ul className="nav flex-column">
+                    {Atendimento.map((link) => (
+                    <li className="nav-item mb-2">
+                        <a href={link.link} className="nav-link p-0 text-body-secondary">
+                        {link.Nome}
+                        </a>
+                    </li>
+                    ))}
+                    </ul>
+                </div>
+
+                <div className="col-md-5 offset-md-1 mb-3">
+                    <form>
+                    <h5>Nos mande sua opinião!</h5>
+                    <p>Sua opinião tambem é relevante!</p>
+                    <div className="d-flex flex-column flex-sm-row w-100 gap-2">
+                        <label htmlFor="newsletter1" className="visually-hidden">Email address</label>
+                        <input id="newsletter1" type="text" className="form-control" placeholder="Email address"/>
+                        <button className="btn btn-primary" type="button">Enviar</button>
+                    </div>
+                    </form>
+                </div>
+                </div>
+
+                <div className="d-flex d flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+                <p>&copy; Banestes 2019 e Matheus Endlich Silveira . Todos os direitos reservados.</p>
+                <ul className="list-unstyled d-flex">
+                <li className="ms-3"><a className="link-body-emphasis" href="https://www.youtube.com/BanestesTV"><i className="bi bi-youtube"/></a></li>
+                <li className="ms-3"><a className="link-body-emphasis" href="https://www.instagram.com/banestes_sa/"><i className="bi bi-instagram"/></a></li>
+                <li className="ms-3"><a className="link-body-emphasis" href="https://www.linkedin.com/company/banestesoficial/"><i className="bi bi-linkedin"/></a></li>
+                </ul>
+                </div>
             </div>
-            <div id='Tecnologias' className=''>
-                <a href="http://"></a>
-                <a href="http://"></a>
-                <a href="http://"></a>
-                <a href="http://"></a>
             </div>
-            <div id='Links Uteis' className=''>
-                <a href="http://"></a>
-                <a href="http://"></a>
-                <a href="http://"></a>
-                <a href="http://"></a>
-            </div>
-            <div id='Links Uteis' className=''>
-                <a href="http://"></a>
-                <a href="http://"></a>
-                <a href="http://"></a>
-                <a href="http://"></a>
-            </div>
-        </div>
-        <div id="Copyright" className='w-100 text-center d-flex justify-content-center align-items-center'>
-            <p className='text-white font-weight-bold'>@ Banestes 2025 e Matheus Endlich Silveira. Todos os direitos reservados. </p>
         </div>
     </footer>
   );

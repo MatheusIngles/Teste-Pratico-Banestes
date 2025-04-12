@@ -3,7 +3,7 @@ import './Header.css'
 
 export default function Header(){
   
-  const [mx,setmx] = useState(window.innerWidth)
+  const [mx,setmx] = useState<number>(window.innerWidth)
 
   useEffect(() => {
     const handleResize = () => {
