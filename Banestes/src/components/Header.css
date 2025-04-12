@@ -1,0 +1,14 @@
+header{
+    height: 30vh;
+    background-color: #014689;
+}
+
+header .imagem{
+    height: 100%;
+}
+
+.text{
+    text-align: center;
+    font-weight: bold;
+    font-family: rival-sans;
+}
