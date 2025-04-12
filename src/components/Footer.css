@@ -26,6 +26,7 @@ footer{
 .list-group-item{
     text-align: center;
     display: flex;
+    color: #004b8c;
     align-items: center;
     flex-direction: column;
     justify-content: center;
