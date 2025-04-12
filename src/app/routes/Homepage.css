@@ -1,0 +1,11 @@
+#Pesquisador{
+    width: 20%;
+    height: 100%;
+}
+
+#boxConteiner{
+    width: 100%;
+    height: 70%;
+    
+    border-right: 1px groove #004b8c ;
+}

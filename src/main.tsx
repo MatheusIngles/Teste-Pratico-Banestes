@@ -1,13 +1,13 @@
-import { StrictMode } from 'react'
+import * as React from 'react'
 import { createRoot } from 'react-dom/client'
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import './index.css'
 import Homepage from './app/routes/Homepage'
-import Perfil from './app/routes/Perfil'
+import Perfil from './app/routes/PerfilCliente'
 import ErrorPage from './app/routes/ErrorPage';
 import App from './app/App'
-
+import AppContext from './app/App'
 
 const router = createBrowserRouter([
   {
@@ -16,13 +16,13 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Homepage /> },
-      { path: "nome", element: <Perfil /> },
+      { path: "Perfil - ", element: <Perfil /> },
     ],
   },
 ]);
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-      <RouterProvider router={router} />
-  </StrictMode>,
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>,
 )
