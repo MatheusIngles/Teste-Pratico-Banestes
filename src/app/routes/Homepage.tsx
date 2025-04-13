@@ -1,20 +1,16 @@
 import './Homepage.css'
-import { useSearchParams } from "react-router-dom";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Form from 'react-bootstrap/Form';
 import * as React from 'react';
+import Papa from 'papaparse';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Table from 'react-bootstrap/Table';
 
 export default function Homepage(){
     const [searchParams, setSearchParams] = useSearchParams();
-
-    type Filtro = {
-        Categoria: string;
-        Ativo: boolean;
-    };
-
+    const [dados, setdados] = React.useState<Array<Record<string, string>>| undefined>(undefined)    
     const [filtrador,setfiltrador] = React.useState<string>('Nome')
     const [ResultadoDoFiltrador,setResultadoDoFiltrador] = React.useState<string>('')
     const [Filtros, setFiltros] = React.useState<Array<Filtro>>([
@@ -27,6 +23,26 @@ export default function Homepage(){
         { Categoria: 'Data Nascimento', Ativo: false }
       ]);
 
+    type Filtro = {
+        Categoria: string;
+        Ativo: boolean;
+    };
+
+    React.useEffect(() => {
+        const buscarCSV = async () => {
+          const response = await fetch(`/data/Clientes.csv?t=${Date.now()}`);
+          const texto = await response.text();
+          const parsed = Papa.parse(texto, {
+            header: true,
+            skipEmptyLines: true,
+          });
+          setdados(parsed.data as Record<string, string>[]);
+        };
+        buscarCSV();
+        const intervalo = setInterval(buscarCSV, 5000); 
+        return () => clearInterval(intervalo);
+    }, []);
+    
     React.useEffect(()=>{
 
         const aplicarFiltro = () => {
@@ -54,11 +70,12 @@ export default function Homepage(){
                         </DropdownButton>
                         <Form.Control aria-label="Digite aqui" value={`${ResultadoDoFiltrador}`} onChange={(palavra) => setResultadoDoFiltrador(palavra.target.value)}/>
                     </InputGroup>
-                    <Form className='w-100 p-t text-center p-3'>
+                    <Form id='filtros' className='w-100 p-t text-center p-3'>
                         {Filtros.map((Categoria: Filtro, index: number)=> (
                            <Form.Check 
                            type="switch"
-                           id="custom-switch"
+                           id={`custom-switch${index}`}
+                           key={index}
                            label= {`${Categoria.Categoria}`}
                            checked={Categoria.Ativo}
                            onChange={()=>{
@@ -78,12 +95,14 @@ export default function Homepage(){
                 <div id="table" className='w-100 h-75'>
                     <Table responsive className='w-100 h-100'>
                         <thead>
-                            <th>Cpf/Cnpj</th>
-                            <th>Nome</th>
-                            <th>email</th>
-                            {Filtros.filter((f) => (f.Ativo)).map((f)=>{return <th>{`${f.Categoria}`}</th>})}
+                            <tr>
+                                <th>Cpf/Cnpj</th>
+                                <th>Nome</th>
+                                <th>email</th>
+                                {Filtros.filter((f) => (f.Ativo)).map((f)=>{return <th key={f.Categoria}>{`${f.Categoria}`}</th>})}
+                            </tr>
                         </thead>
-                        
+
                     </Table>
                 </div>
             </div>
