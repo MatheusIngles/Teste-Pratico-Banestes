@@ -62,11 +62,24 @@ footer{
 }
 
 
-@media screen and (max-width: 770px) and (min-height: 825px) {
+@media screen and (max-width: 770px) and (max-height: 825px) {
     footer {
       height: 80vh !important;
     }
 }
+
+@media screen and (max-height: 800px) {
+    footer {
+      height: 90vh !important;
+    }
+}
+
+@media screen and (max-height: 500px) {
+    footer {
+      height: 140vh !important;
+    }
+}
+
 
 
 @media screen and (max-width: 770px)  {
@@ -120,7 +133,7 @@ footer{
 
 }
 
-@media screen and (max-width: 550px) and (min-height: 825px)  {
+@media screen and (max-width: 550px) and (max-height: 825px)  {
 
     footer{
         height: 100vh !important;

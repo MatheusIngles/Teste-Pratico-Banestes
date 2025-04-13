@@ -5,6 +5,13 @@
 .subMain{
     background-color: rgb(255, 255, 255);
     border-radius: 25px 25px 0 0;
+    display: flex;
+}
+
+@media screen and (max-width: 750px){
+    .subMain{
+        flex-direction: column;
+    }
 }
 
 @media screen and (max-width: 550px) {

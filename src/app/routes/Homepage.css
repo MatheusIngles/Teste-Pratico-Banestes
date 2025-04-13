@@ -3,6 +3,34 @@
     height: 100%;
 }
 
+#Organizador{
+    width: 80%;
+    height: 100%;
+}
+
+table th{
+    text-align: center;
+    border: 2px groove ;
+}
+
+@media screen and (max-width: 750px){
+    #Pesquisador{
+        width: 100%;
+        height: 30%;
+    }
+
+    #Organizador{
+        width: 100%;
+        height: 70%;
+    }
+
+    #boxConteiner{
+        border-right: 0px !important;
+        border-bottom: 1px groove #004b8c ;
+    }
+
+}
+
 .p-t{
     padding-top: 0% !important;
 }

@@ -7,7 +7,6 @@ import Homepage from './app/routes/Homepage'
 import Perfil from './app/routes/PerfilCliente'
 import ErrorPage from './app/routes/ErrorPage';
 import App from './app/App'
-import AppContext from './app/App'
 
 const router = createBrowserRouter([
   {
@@ -16,7 +15,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Homepage /> },
-      { path: "Perfil - ", element: <Perfil /> },
+      { path: "Perfil/:id", element: <Perfil /> },
     ],
   },
 ]);

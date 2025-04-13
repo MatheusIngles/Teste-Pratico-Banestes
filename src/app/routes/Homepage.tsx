@@ -1,21 +1,43 @@
 import './Homepage.css'
+import { useSearchParams } from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Form from 'react-bootstrap/Form';
 import * as React from 'react';
-import { AppContext } from '../App';
 import InputGroup from 'react-bootstrap/InputGroup';
+import Table from 'react-bootstrap/Table';
 
 export default function Homepage(){
-    const [filtrador, setfiltrador, ResultadoDoFiltrador,setResultadoDoFiltrador, Filtros, setFiltros] = React.useContext(AppContext);
+    const [searchParams, setSearchParams] = useSearchParams();
+
     type Filtro = {
         Categoria: string;
         Ativo: boolean;
     };
 
+    const [filtrador,setfiltrador] = React.useState<string>('Nome')
+    const [ResultadoDoFiltrador,setResultadoDoFiltrador] = React.useState<string>('')
+    const [Filtros, setFiltros] = React.useState<Array<Filtro>>([
+        { Categoria: 'Endereco', Ativo: false},
+        { Categoria: 'Renda Anual', Ativo: false},
+        { Categoria: 'Patrimonio', Ativo: false },
+        { Categoria: 'Estado Civil', Ativo: false},
+        { Categoria: 'RG', Ativo: false },
+        { Categoria: 'Nome Social', Ativo: false },
+        { Categoria: 'Data Nascimento', Ativo: false }
+      ]);
+
     React.useEffect(()=>{
-        // window.location.reload();
-    }, [Filtros])
+
+        const aplicarFiltro = () => {
+            setSearchParams({
+              filtrador: `${filtrador}`,
+              ResultadoDoFiltrador: `${ResultadoDoFiltrador}`,
+            });
+          };
+
+        aplicarFiltro()
+    }, [Filtros, ResultadoDoFiltrador, filtrador])
 
     return(<>
             <div id="Pesquisador" className="d-flex justify-content-end align-items-center">
@@ -52,8 +74,18 @@ export default function Homepage(){
                     </Form>
                 </div>
             </div>
-            <div id="Organizador">
-
+            <div id="Organizador" className='d-flex justify-content-center align-items-center'>
+                <div id="table" className='w-100 h-75'>
+                    <Table responsive className='w-100 h-100'>
+                        <thead>
+                            <th>Cpf/Cnpj</th>
+                            <th>Nome</th>
+                            <th>email</th>
+                            {Filtros.filter((f) => (f.Ativo)).map((f)=>{return <th>{`${f.Categoria}`}</th>})}
+                        </thead>
+                        
+                    </Table>
+                </div>
             </div>
             </>)
 }
