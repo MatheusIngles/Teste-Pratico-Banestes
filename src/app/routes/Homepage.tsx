@@ -1,5 +1,5 @@
 import './Homepage.css'
-import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Form from 'react-bootstrap/Form';
@@ -59,11 +59,12 @@ export default function Homepage(){
             setSearchParams({
               filtrador: `${filtrador}`,
               ResultadoDoFiltrador: `${ResultadoDoFiltrador}`,
+              paginas: `${pages}`
             });
           };
 
         aplicarFiltro()
-    }, [Filtros, ResultadoDoFiltrador, filtrador])
+    }, [Filtros, ResultadoDoFiltrador, filtrador, pages])
 
     React.useEffect(() => {
         console.log(dados); // Agora será chamado quando `dados` for atualizado
@@ -154,7 +155,7 @@ export default function Homepage(){
                     </Dropdown>
                 </div>
             </div>
-            <div id="Organizador" className='d-flex justify-content-center align-items-center'>
+            <div id="Organizador" className='d-flex flex-column justify-content-center align-items-center'>
                 <div id="table" className='h-75 m-5'>
                     <Table responsive className='w-100 h-100'>
                         <thead>
@@ -169,6 +170,21 @@ export default function Homepage(){
                             <RestornarTabela/>
                         </tbody>
                     </Table>
+                </div>
+                <div id="pagination" className='d-flex justify-content-end w-100 h-25'>
+                    <Pagination className='p-3'>
+                    <Pagination.First onClick={() => setPages(1)}/>
+                    <Pagination.Prev onClick={() => {if (dados !== undefined){if(pages > Math.ceil(dados.length / 10)){setPages(pages - 1)}}}}/>
+                        { dados !== undefined &&
+                        Array.from({ length: Math.ceil(dados.length / 10 ) }).map((_, index) => (
+                            <Pagination.Item key={index} active={index + 1 === pages} onClick={() => setPages(index + 1)}>
+                                {index + 1}
+                            </Pagination.Item>
+                        ))
+                        }
+                    <Pagination.Next onClick={() => {if (dados !== undefined){if(pages < Math.ceil(dados.length / 10)){setPages(pages + 1)}}} }/>
+                    <Pagination.Last onClick={() => {if (dados !== undefined) {setPages(Math.ceil(dados.length / 10))}}}/>
+                    </Pagination>
                 </div>
             </div>
             </>)
