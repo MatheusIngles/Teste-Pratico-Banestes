@@ -3,44 +3,54 @@ import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Form from 'react-bootstrap/Form';
+import Pagination from 'react-bootstrap/Pagination';
 import * as React from 'react';
 import Papa from 'papaparse';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Table from 'react-bootstrap/Table';
 
 export default function Homepage(){
+    const n = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams();
+    const [pages, setPages] = React.useState<number>(1);
     const [dados, setdados] = React.useState<Array<Record<string, string>>| undefined>(undefined)    
     const [filtrador,setfiltrador] = React.useState<string>('Nome')
     const [ResultadoDoFiltrador,setResultadoDoFiltrador] = React.useState<string>('')
     const [Filtros, setFiltros] = React.useState<Array<Filtro>>([
-        { Categoria: 'Endereco', Ativo: false},
-        { Categoria: 'Renda Anual', Ativo: false},
-        { Categoria: 'Patrimonio', Ativo: false },
-        { Categoria: 'Estado Civil', Ativo: false},
-        { Categoria: 'RG', Ativo: false },
-        { Categoria: 'Nome Social', Ativo: false },
-        { Categoria: 'Data Nascimento', Ativo: false }
+        { Categoria: 'Endereço', Ativo: false, referencia: 'endereco'},
+        { Categoria: 'Renda Anual', Ativo: false, referencia: 'rendaAnual'},
+        { Categoria: 'Patrimonio', Ativo: false, referencia: 'patrimonio' },
+        { Categoria: 'Estado Civil', Ativo: false, referencia: 'estadoCivil' },
+        { Categoria: 'RG', Ativo: false, referencia: 'rg' },
+        { Categoria: 'Nome Social', Ativo: false, referencia: 'nomeSocial' },
+        { Categoria: 'Data Nascimento', Ativo: false, referencia: 'dataNascimento' },
+        { Categoria: 'Codigo da Agencia', Ativo: false, referencia: 'codigoAgencia' },
       ]);
 
     type Filtro = {
         Categoria: string;
         Ativo: boolean;
+        referencia: string;
     };
 
     React.useEffect(() => {
         const buscarCSV = async () => {
-          const response = await fetch(`/data/Clientes.csv?t=${Date.now()}`);
-          const texto = await response.text();
-          const parsed = Papa.parse(texto, {
-            header: true,
-            skipEmptyLines: true,
-          });
-          setdados(parsed.data as Record<string, string>[]);
+            try{
+                const response = await fetch(`/data/Clientes.csv?t=${Date.now()}`);
+                if (!response.ok) throw new Error("Erro na requisição");
+                const texto = await response.text();
+                const parsed = Papa.parse(texto, {
+                    header: true,
+                    skipEmptyLines: true,
+                });
+                setdados(parsed.data as Record<string, string>[]);
+            } catch(error){
+                throw Error
+            }
         };
         buscarCSV();
-        const intervalo = setInterval(buscarCSV, 5000); 
-        return () => clearInterval(intervalo);
+     //   const intervalo = setInterval(buscarCSV, 5000); 
+     //   return () => clearInterval(intervalo);
     }, []);
     
     React.useEffect(()=>{
@@ -55,8 +65,51 @@ export default function Homepage(){
         aplicarFiltro()
     }, [Filtros, ResultadoDoFiltrador, filtrador])
 
+    React.useEffect(() => {
+        console.log(dados); // Agora será chamado quando `dados` for atualizado
+    }, [dados]);
+
+    const RestornarTabela = () => {
+        if(dados == undefined){
+            return null
+        }
+        const TodosOsFiltros: Array<Filtro> = [
+            { Categoria: 'Cpf/Cnpj', Ativo: true, referencia: 'cpfCnpj' },
+            { Categoria: 'Nome', Ativo: true, referencia: 'nome' },
+            { Categoria: 'email', Ativo: true, referencia: 'email' },
+            ...Filtros
+          ];
+        if (ResultadoDoFiltrador !== '') {
+            switch (filtrador) {
+                case 'Nome':
+                    return(
+                    dados.filter((item) => item.nome.toLowerCase().includes(ResultadoDoFiltrador.toLowerCase()))).slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {
+                        return(
+                        <tr onClick={() => n(`/Perfil/${dado.id}`)} key={dado.id}>
+                            {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia]}`}</td>})}
+                        </tr>
+                    )})
+                case 'Cpf/Cnpj':
+                    return(
+                        dados.filter((item) => item.cpfCnpj.toLowerCase().includes(ResultadoDoFiltrador.toLowerCase()))).slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {
+                            return(
+                            <tr onClick={() => n(`/Perfil/${dado.id}`)} key={dado.id}>
+                                {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia]}`}</td>})}
+                            </tr>
+                        )})
+            }
+        } else {
+            return(
+                dados.slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {return(
+                    <tr onClick={() => n(`/Perfil/${dado.id}`)} key={dado.id}>
+                        {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia]}`}</td>})}
+                    </tr>
+                )})
+        )}
+    }
+
     return(<>
-            <div id="Pesquisador" className="d-flex justify-content-end align-items-center">
+            <div id="Pesquisador" className="d-flex justify-content-between align-items-center">
                 <div id="boxConteiner" className='d-flex justify-content-center  align-items-center'>
                     <InputGroup className="mb-3 p-3">
                         <DropdownButton
@@ -65,44 +118,56 @@ export default function Homepage(){
                         id="input-group-dropdown-1"
                         >
                         <Dropdown.Item onClick={()=>{setfiltrador('Nome')}}>Nome</Dropdown.Item>
-                        <Dropdown.Item onClick={()=>{setfiltrador('Cpf')}}>Cpf</Dropdown.Item>
-                        <Dropdown.Item onClick={()=>{setfiltrador('Cnpj')}}>Cnpj</Dropdown.Item>
+                        <Dropdown.Item onClick={()=>{setfiltrador('Cpf/Cnpj')}}>Cpf/Cnpj</Dropdown.Item>
                         </DropdownButton>
                         <Form.Control aria-label="Digite aqui" value={`${ResultadoDoFiltrador}`} onChange={(palavra) => setResultadoDoFiltrador(palavra.target.value)}/>
                     </InputGroup>
-                    <Form id='filtros' className='w-100 p-t text-center p-3'>
-                        {Filtros.map((Categoria: Filtro, index: number)=> (
-                           <Form.Check 
-                           type="switch"
-                           id={`custom-switch${index}`}
-                           key={index}
-                           label= {`${Categoria.Categoria}`}
-                           checked={Categoria.Ativo}
-                           onChange={()=>{
-                                    const novosFiltros = [...Filtros];
-                                    novosFiltros[index] = {
+                </div>
+                <div id="dropdown">
+                <Dropdown>
+                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                        Adicionar Mais Coisa
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                        <Form id='filtros' className='w-100 p-t text-center p-3'>
+                            {Filtros.map((Categoria: Filtro, index: number)=> (
+                            <Dropdown.Item onClick={()=>{
+                                const novosFiltros = [...Filtros];
+                                novosFiltros[index] = {
                                     ...novosFiltros[index],
                                     Ativo: !novosFiltros[index].Ativo,
-                                    };
-                                    setFiltros(novosFiltros);
-                                }}
-                         /> 
-                        ))}
-                    </Form>
+                                };
+                                setFiltros(novosFiltros);
+                            }}>
+                                <Form.Check 
+                                type="switch"
+                                id={`custom-switch${index}`}
+                                key={index}
+                                label= {`${Categoria.Categoria}`}
+                                checked={Categoria.Ativo}
+                                /> 
+                            </Dropdown.Item>
+                            ))}
+                        </Form>
+                    </Dropdown.Menu>
+                    </Dropdown>
                 </div>
             </div>
             <div id="Organizador" className='d-flex justify-content-center align-items-center'>
-                <div id="table" className='w-100 h-75'>
+                <div id="table" className='h-75 m-5'>
                     <Table responsive className='w-100 h-100'>
                         <thead>
                             <tr>
                                 <th>Cpf/Cnpj</th>
                                 <th>Nome</th>
-                                <th>email</th>
+                                <th>Email</th>
                                 {Filtros.filter((f) => (f.Ativo)).map((f)=>{return <th key={f.Categoria}>{`${f.Categoria}`}</th>})}
                             </tr>
                         </thead>
-
+                        <tbody>
+                            <RestornarTabela/>
+                        </tbody>
                     </Table>
                 </div>
             </div>
