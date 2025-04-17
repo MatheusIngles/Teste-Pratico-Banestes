@@ -116,7 +116,7 @@ export default function Homepage(){
                     return(
                     dados.filter((item) => item.nome.toLowerCase().includes(ResultadoDoFiltrador.toLowerCase()))).slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {
                         return(
-                        <tr onClick={() => {clearInterval(intervalo)
+                        <tr className='tr' onClick={() => {clearInterval(intervalo)
                                             n(`/Perfil/${dado.id}`)}} key={dado.id}>
                             {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia as keyof Cliente]}`}</td>})}
                         </tr>
@@ -125,7 +125,7 @@ export default function Homepage(){
                     return(
                         dados.filter((item) => item.cpfCnpj.toLowerCase().includes(ResultadoDoFiltrador.toLowerCase()))).slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {
                             return(
-                            <tr onClick={() => {clearInterval(intervalo)
+                            <tr className='tr' onClick={() => {clearInterval(intervalo)
                                                 n(`/Perfil/${dado.id}`)}} key={dado.id}>
                                 {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia as keyof Cliente]}`}</td>})}
                             </tr>
@@ -134,7 +134,7 @@ export default function Homepage(){
         } else {
             return(
                 dados.slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {return(
-                    <tr onClick={() => {clearInterval(intervalo)
+                    <tr className='tr' onClick={() => {clearInterval(intervalo)
                                         n(`/Perfil/${dado.id}`)}} key={dado.id}>
                         {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia as keyof Cliente]}`}</td>})}
                     </tr>

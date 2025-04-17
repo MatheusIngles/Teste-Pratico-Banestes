@@ -1,6 +1,6 @@
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from "react-router-dom"
-import { Container, Row, Col, Card, Tab, Nav, Table, Badge } from 'react-bootstrap';
+import { Container, Row, Col, Card, Tab, Nav, Table } from 'react-bootstrap';
 import Papa from 'papaparse'
 import './PerfilCliente.css'
 
@@ -42,10 +42,9 @@ export default function Perfil() {
     const [dados, setdados] = useState<Array<Cliente>>([])
     const [cliente, setcliente] = useState<Cliente>()
     const [agencias, setAgencias] = useState<Array<Agencia>>([])
+    const [AgenciaCliente, setAgenciaCliente] = useState<Agencia>();
     const [contas, setContas] = useState<Array<Conta>>([])
     const [contasCliente, setContasCliente] = useState<Array<Conta>>([]);
-    const [agencia, setagencia] = useState<Agencia>()
-    const [AgenciaCliente, setAgenciaCliente] = useState<Agencia>();
 
     useEffect(() => {
         const buscarCSV = async () => {
@@ -167,9 +166,8 @@ export default function Perfil() {
                     <Tab.Content>
                     <Tab.Pane eventKey="contas">
                         { contasCliente.length !== 0 && <Card bg="white" text="black">
-                        <Card.Header>Contas Bancárias</Card.Header>
                         <Card.Body>
-                            <Table variant="white" striped bordered hover responsive>
+                            <Table variant="white" striped bordered responsive>
                             <thead className='thead'>
                                 <tr className='tr'>
                                     <th className='th'>Tipo</th>
@@ -178,7 +176,7 @@ export default function Perfil() {
                                     <th className='th'>Credito Disponivel</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody className='tbody'>
                                 {contasCliente.map((conta, index) => (
                                 <tr key={index}>
                                     <td className='th'>{conta.tipo}</td>
@@ -191,10 +189,16 @@ export default function Perfil() {
                             </Table>
                         </Card.Body>
                         </Card>}
+                        { contasCliente.length === 0 && 
+                        <Card bg="white" text="black">
+                            <Card.Body>
+                                <p>Este cliente ainda nao possui contas bancarias</p>
+                            </Card.Body>
+                            </Card>}
                     </Tab.Pane>
 
                     <Tab.Pane eventKey="agencia">
-                        <Card bg="dark" text="white">
+                        <Card bg="white" text="black">
                         <Card.Body>
                             <p>Informações da agência vão aqui...</p>
                         </Card.Body>
