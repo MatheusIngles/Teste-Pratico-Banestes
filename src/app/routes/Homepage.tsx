@@ -33,7 +33,6 @@ export default function Homepage(){
     const [dados, setdados] = useState<Array<Cliente>| undefined>(undefined)    
     const [filtrador,setfiltrador] = useState<string>('Nome')
     const [ResultadoDoFiltrador,setResultadoDoFiltrador] = useState<string>('')
-    const [intervalo, setintervalo] = useState<NodeJS.Timeout>()
     const [Filtros, setFiltros] = useState<Array<Filtro>>([
         { Categoria: 'Endereço', Ativo: false, referencia: 'endereco'},
         { Categoria: 'Renda Anual', Ativo: false, referencia: 'rendaAnual'},
@@ -69,7 +68,8 @@ export default function Homepage(){
             }
         }
         buscarCSV()
-        setintervalo(setInterval(buscarCSV, 5000)) 
+        const interval = setInterval(buscarCSV, 5000)
+        return () => clearInterval(interval) 
     }, [])
 
     useEffect(() => {
@@ -116,8 +116,7 @@ export default function Homepage(){
                     return(
                     dados.filter((item) => item.nome.toLowerCase().includes(ResultadoDoFiltrador.toLowerCase()))).slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {
                         return(
-                        <tr className='tr' onClick={() => {clearInterval(intervalo)
-                                            n(`/Perfil/${dado.id}`)}} key={dado.id}>
+                        <tr className='tr' onClick={() =>  n(`/Perfil/${dado.id}`)} key={dado.id}>
                             {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia as keyof Cliente]}`}</td>})}
                         </tr>
                     )})
@@ -125,8 +124,7 @@ export default function Homepage(){
                     return(
                         dados.filter((item) => item.cpfCnpj.toLowerCase().includes(ResultadoDoFiltrador.toLowerCase()))).slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {
                             return(
-                            <tr className='tr' onClick={() => {clearInterval(intervalo)
-                                                n(`/Perfil/${dado.id}`)}} key={dado.id}>
+                            <tr className='tr' onClick={() => n(`/Perfil/${dado.id}`)} key={dado.id}>
                                 {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia as keyof Cliente]}`}</td>})}
                             </tr>
                         )})
@@ -134,8 +132,7 @@ export default function Homepage(){
         } else {
             return(
                 dados.slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {return(
-                    <tr className='tr' onClick={() => {clearInterval(intervalo)
-                                        n(`/Perfil/${dado.id}`)}} key={dado.id}>
+                    <tr className='tr' onClick={() => n(`/Perfil/${dado.id}`)} key={dado.id}>
                         {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia as keyof Cliente]}`}</td>})}
                     </tr>
                 )})
@@ -143,49 +140,51 @@ export default function Homepage(){
     }
 
     return(<>
-            <div id="Pesquisador" className="d-flex justify-content-between align-items-center">
-                <div id="boxConteiner" className='d-flex justify-content-center  align-items-center'>
-                    <InputGroup className="mb-3 p-3">
-                        <DropdownButton
-                        variant="outline-secondary"
-                        title={`${filtrador}`}
-                        id="input-group-dropdown-1"
-                        >
-                        <Dropdown.Item onClick={()=>{setfiltrador('Nome')}}>Nome</Dropdown.Item>
-                        <Dropdown.Item onClick={()=>{setfiltrador('Cpf/Cnpj')}}>Cpf/Cnpj</Dropdown.Item>
-                        </DropdownButton>
-                        <Form.Control aria-label="Digite aqui" value={`${ResultadoDoFiltrador}`} onChange={(palavra) => setResultadoDoFiltrador(palavra.target.value)}/>
-                    </InputGroup>
-                </div>
-                <div id="dropdown">
-                <Dropdown>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
-                        Adicionar Mais Coisa
-                    </Dropdown.Toggle>
+            <div id="Pesquisador" className="d-flex justify-content-center align-items-center">
+                <div className='search d-flex justify-content-between h-100'>
+                    <div id="boxConteiner" className='d-flex justify-content-center  align-items-center'>
+                        <InputGroup className="mb-3 p-3">
+                            <DropdownButton
+                            variant="outline-secondary"
+                            title={`${filtrador}`}
+                            id="input-group-dropdown-1"
+                            >
+                            <Dropdown.Item onClick={()=>{setfiltrador('Nome')}}>Nome</Dropdown.Item>
+                            <Dropdown.Item onClick={()=>{setfiltrador('Cpf/Cnpj')}}>Cpf/Cnpj</Dropdown.Item>
+                            </DropdownButton>
+                            <Form.Control aria-label="Digite aqui" value={`${ResultadoDoFiltrador}`} onChange={(palavra) => setResultadoDoFiltrador(palavra.target.value)}/>
+                        </InputGroup>
+                    </div>
+                    <div id="dropdown" className='d-flex justify-content-center align-items-center'>
+                    <Dropdown>
+                        <Dropdown.Toggle variant="success" id="dropdown-basic">
+                            Adicionar Mais Coisa
+                        </Dropdown.Toggle>
 
-                    <Dropdown.Menu>
-                        <Form id='filtros' className='w-100 p-t text-center p-3'>
-                            {Filtros.map((Categoria: Filtro, index: number)=> (
-                            <Dropdown.Item onClick={()=>{
-                                const novosFiltros = [...Filtros]
-                                novosFiltros[index] = {
-                                    ...novosFiltros[index],
-                                    Ativo: !novosFiltros[index].Ativo,
-                                }
-                                setFiltros(novosFiltros)
-                            }}>
-                                <Form.Check 
-                                type="switch"
-                                id={`custom-switch${index}`}
-                                key={index}
-                                label= {`${Categoria.Categoria}`}
-                                checked={Categoria.Ativo}
-                                /> 
-                            </Dropdown.Item>
-                            ))}
-                        </Form>
-                    </Dropdown.Menu>
-                    </Dropdown>
+                        <Dropdown.Menu>
+                            <Form id='filtros' className='w-100 p-t text-center p-3'>
+                                {Filtros.map((Categoria: Filtro, index: number)=> (
+                                <Dropdown.Item onClick={()=>{
+                                    const novosFiltros = [...Filtros]
+                                    novosFiltros[index] = {
+                                        ...novosFiltros[index],
+                                        Ativo: !novosFiltros[index].Ativo,
+                                    }
+                                    setFiltros(novosFiltros)
+                                }}>
+                                    <Form.Check 
+                                    type="switch"
+                                    id={`custom-switch${index}`}
+                                    key={index}
+                                    label= {`${Categoria.Categoria}`}
+                                    checked={Categoria.Ativo}
+                                    /> 
+                                </Dropdown.Item>
+                                ))}
+                            </Form>
+                        </Dropdown.Menu>
+                        </Dropdown>
+                    </div>
                 </div>
             </div>
             <div id="Organizador" className='d-flex flex-column justify-content-center align-items-center'>

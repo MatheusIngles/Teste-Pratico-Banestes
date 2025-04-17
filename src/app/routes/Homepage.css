@@ -9,6 +9,10 @@
     height: 80%;
 }
 
+.search{
+    width: 92%;
+}
+
 table{
     border-collapse: separate;
     border-spacing: 0 0px;
@@ -43,13 +47,17 @@ tbody tr:last-child td:last-child {
     #boxConteiner{
         border-right: 0px !important;
         flex-direction: column;
-        width: 80% !important;
+        width: 100% !important;
         height: 50% !important;
     }
 
     #Pesquisador{
         height: 10% !important;
+    }
+
+    .search{
         flex-direction: column;
+        width: 100% !important;
     }
 
 }

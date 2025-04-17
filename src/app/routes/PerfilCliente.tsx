@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from "react-router-dom"
-import { Container, Row, Col, Card, Tab, Nav, Table } from 'react-bootstrap';
+import { Container, Row, Col, Card, Tab, Nav, Table, Button } from 'react-bootstrap';
 import Papa from 'papaparse'
 import './PerfilCliente.css'
 
@@ -44,6 +44,7 @@ export default function Perfil() {
     const [agencias, setAgencias] = useState<Array<Agencia>>([])
     const [AgenciaCliente, setAgenciaCliente] = useState<Agencia>();
     const [contas, setContas] = useState<Array<Conta>>([])
+    const [leu, setleu] = useState<boolean>(false)
     const [contasCliente, setContasCliente] = useState<Array<Conta>>([]);
 
     useEffect(() => {
@@ -58,13 +59,14 @@ export default function Perfil() {
                     skipEmptyLines: true,
                 })
                     setdados(parsed.data as Cliente[])
+                    setleu(true)
             } catch (error) {
                 throw Error
             }
         }
         buscarCSV()
-        //const inter = setInterval(buscarCSV, 5000)
-        //return () => clearInterval(inter)
+        const interval = setInterval(buscarCSV, 5000)
+        return () => clearInterval(interval)
     }, [])
 
     useEffect(() => {
@@ -119,6 +121,9 @@ export default function Perfil() {
             const contasCliente = contas.filter(c => c.cpfCnpjCliente === cli.cpfCnpj);
             setContasCliente(contasCliente);
         }
+        if(leu && dados.find(c => c.id === id) === undefined){
+            n('404')
+        }
     }, [dados, agencias, contas])
 
     const Tela = () =>{
@@ -128,8 +133,21 @@ export default function Perfil() {
         return (
         <div className="d-flex align-items-center justify-content-center w-100 h-100">
             <div id='Cliente' className='d-flex align-items-center justify-content-center w-100 h-75'>
-            <Container className="my-2 text-white p-1 rounded">
-                <h2 className="mb-4 text-black">Detalhes do Cliente</h2>
+            <Container className="my-2 text-black p-1 rounded">
+            <Row className="justify-content-start mb-2">
+            <Col xs="auto">
+                <Button variant="outline-primary" onClick={() => n(-1)}>
+                ← Voltar
+                </Button>
+            </Col>
+            </Row>
+
+            <Row className="mb-4">
+            <Col>
+                <h2 className="m-0">Detalhes do Cliente</h2>
+            </Col>
+            </Row>
+
 
                 <Card  text="black" className="mb-2">
                     <Card.Header>Informações Pessoais</Card.Header>
@@ -198,11 +216,24 @@ export default function Perfil() {
                     </Tab.Pane>
 
                     <Tab.Pane eventKey="agencia">
-                        <Card bg="white" text="black">
+                        {AgenciaCliente !== undefined && <Card bg="white" text="black">
                         <Card.Body>
-                            <p>Informações da agência vão aqui...</p>
+                        <p className="text-muted mb-4">Detalhes da agência vinculada ao cliente</p>
+                        <Row>
+                            <Col md={6}>
+                            <p><strong>Nome da Agência:</strong> {AgenciaCliente.nome}</p>
+                            <p><strong>Codigo:</strong> {AgenciaCliente.codigo}</p>
+                            <p><strong>Endereço:</strong> {AgenciaCliente.endereco}</p>
+                            </Col>
+                        </Row>
                         </Card.Body>
-                        </Card>
+                        </Card>}
+                        {AgenciaCliente === undefined && 
+                        <Card bg="white" text="black">
+                            <Card.Body>
+                                <p>Este cliente ainda nao possui uma agencia vinculada</p>
+                            </Card.Body>
+                            </Card>}
                     </Tab.Pane>
                     </Tab.Content>
                 </Tab.Container>
