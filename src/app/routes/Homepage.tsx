@@ -30,8 +30,9 @@ export default function Homepage(){
     const n = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams()
     const [pages, setPages] = useState<number>(1)
-    const [dados, setdados] = useState<Array<Cliente>| undefined>(undefined)    
+    const [dados, setdados] = useState<Array<Cliente>>([])    
     const [filtrador,setfiltrador] = useState<string>('Nome')
+    const [dadosFiltrados, setdadosFiltrados] = useState<Array<Cliente>>([])
     const [ResultadoDoFiltrador,setResultadoDoFiltrador] = useState<string>('')
     const [Filtros, setFiltros] = useState<Array<Filtro>>([
         { Categoria: 'Endereço', Ativo: false, referencia: 'endereco'},
@@ -88,7 +89,6 @@ export default function Homepage(){
     }, [searchParams])
     
     useEffect(()=>{
-
         const aplicarFiltro = () => {
             setSearchParams({
               filtrador: `${filtrador}`,
@@ -100,6 +100,23 @@ export default function Homepage(){
         aplicarFiltro()
     }, [Filtros, ResultadoDoFiltrador, filtrador, pages])
 
+    useEffect(() => {
+        if (ResultadoDoFiltrador !== '') {
+            switch (filtrador) {
+                case 'Nome':
+                    setdadosFiltrados(dados.filter((item) => item.nome.toLowerCase().includes(ResultadoDoFiltrador.toLowerCase())))
+                    setPages(1)
+                    break;
+                case 'Cpf/Cnpj':
+                    setdadosFiltrados(dados.filter((item) => item.cpfCnpj.toLowerCase().includes(ResultadoDoFiltrador.toLowerCase())))
+                    setPages(1)
+                    break;
+            }
+        } else {
+            setdadosFiltrados(dados)
+            setPages(1)
+        }
+    }, [ResultadoDoFiltrador, dados])
     const RestornarTabela = () => {
         if(dados == undefined){
             return null
@@ -114,24 +131,24 @@ export default function Homepage(){
             switch (filtrador) {
                 case 'Nome':
                     return(
-                    dados.filter((item) => item.nome.toLowerCase().includes(ResultadoDoFiltrador.toLowerCase()))).slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {
+                        dadosFiltrados.slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {
                         return(
                         <tr className='tr' onClick={() =>  n(`/Perfil/${dado.id}`)} key={dado.id}>
                             {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia as keyof Cliente]}`}</td>})}
                         </tr>
-                    )})
+                    )}))
                 case 'Cpf/Cnpj':
                     return(
-                        dados.filter((item) => item.cpfCnpj.toLowerCase().includes(ResultadoDoFiltrador.toLowerCase()))).slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {
+                        dadosFiltrados.slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {
                             return(
                             <tr className='tr' onClick={() => n(`/Perfil/${dado.id}`)} key={dado.id}>
                                 {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia as keyof Cliente]}`}</td>})}
                             </tr>
-                        )})
+                        )}))
             }
         } else {
             return(
-                dados.slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {return(
+                dadosFiltrados.slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {return(
                     <tr className='tr' onClick={() => n(`/Perfil/${dado.id}`)} key={dado.id}>
                         {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia as keyof Cliente]}`}</td>})}
                     </tr>
@@ -206,16 +223,16 @@ export default function Homepage(){
                 <div id="pagination" className='d-flex justify-content-end w-100 h-25'>
                     <Pagination className='p-3'>
                     <Pagination.First onClick={() => setPages(1)}/>
-                    <Pagination.Prev onClick={() => {if (dados !== undefined){if(pages > Math.ceil(dados.length / 10)){setPages(pages - 1)}}}}/>
-                        { dados !== undefined &&
-                        Array.from({ length: Math.ceil(dados.length / 10 ) }).map((_, index) => (
+                    <Pagination.Prev onClick={() => {if (dadosFiltrados !== undefined){if(pages > Math.ceil(dadosFiltrados.length / 10)){setPages(pages - 1)}}}}/>
+                        { dadosFiltrados !== undefined &&
+                        Array.from({ length: Math.ceil(dadosFiltrados.length / 10 ) }).map((_, index) => (
                             <Pagination.Item key={index} active={index + 1 === pages} onClick={() => setPages(index + 1)}>
                                 {index + 1}
                             </Pagination.Item>
                         ))
                         }
-                    <Pagination.Next onClick={() => {if (dados !== undefined){if(pages < Math.ceil(dados.length / 10)){setPages(pages + 1)}}} }/>
-                    <Pagination.Last onClick={() => {if (dados !== undefined) {setPages(Math.ceil(dados.length / 10))}}}/>
+                    <Pagination.Next onClick={() => {if (dadosFiltrados !== undefined){if(pages < Math.ceil(dadosFiltrados.length / 10)){setPages(pages + 1)}}} }/>
+                    <Pagination.Last onClick={() => {if (dadosFiltrados !== undefined) {setPages(Math.ceil(dadosFiltrados.length / 10))}}}/>
                     </Pagination>
                 </div>
             </div>

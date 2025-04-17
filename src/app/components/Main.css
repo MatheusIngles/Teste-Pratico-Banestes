@@ -7,6 +7,10 @@
     border-radius: 25px 25px 0 0; 
 }
 
+.subMain {
+    min-height: 430px;
+}
+
 @media screen and (max-width: 750px){
     .subMain{
         flex-direction: column;
