@@ -1,22 +1,40 @@
 import './Homepage.css'
-import { useNavigate, useSearchParams } from "react-router-dom";
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Form from 'react-bootstrap/Form';
-import Pagination from 'react-bootstrap/Pagination';
-import * as React from 'react';
-import Papa from 'papaparse';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Table from 'react-bootstrap/Table';
+import { useNavigate, useSearchParams } from "react-router-dom"
+import Dropdown from 'react-bootstrap/Dropdown'
+import DropdownButton from 'react-bootstrap/DropdownButton'
+import Form from 'react-bootstrap/Form'
+import Pagination from 'react-bootstrap/Pagination'
+import { useState, useEffect } from 'react'
+import Papa from 'papaparse'
+import InputGroup from 'react-bootstrap/InputGroup'
+import Table from 'react-bootstrap/Table'
+
 
 export default function Homepage(){
+
+    type Cliente = {
+        id: string
+        cpfCnpj: string
+        rg?: string
+        dataNascimento: Date
+        nome: string
+        nomeSocial?: string
+        email: string
+        endereco: string
+        rendaAnual: number
+        patrimonio: number
+        estadoCivil: string
+        codigoAgencia: number
+    }
+
     const n = useNavigate()
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [pages, setPages] = React.useState<number>(1);
-    const [dados, setdados] = React.useState<Array<Record<string, string>>| undefined>(undefined)    
-    const [filtrador,setfiltrador] = React.useState<string>('Nome')
-    const [ResultadoDoFiltrador,setResultadoDoFiltrador] = React.useState<string>('')
-    const [Filtros, setFiltros] = React.useState<Array<Filtro>>([
+    const [searchParams, setSearchParams] = useSearchParams()
+    const [pages, setPages] = useState<number>(1)
+    const [dados, setdados] = useState<Array<Cliente>| undefined>(undefined)    
+    const [filtrador,setfiltrador] = useState<string>('Nome')
+    const [ResultadoDoFiltrador,setResultadoDoFiltrador] = useState<string>('')
+    const [intervalo, setintervalo] = useState<NodeJS.Timeout>()
+    const [Filtros, setFiltros] = useState<Array<Filtro>>([
         { Categoria: 'Endereço', Ativo: false, referencia: 'endereco'},
         { Categoria: 'Renda Anual', Ativo: false, referencia: 'rendaAnual'},
         { Categoria: 'Patrimonio', Ativo: false, referencia: 'patrimonio' },
@@ -25,50 +43,62 @@ export default function Homepage(){
         { Categoria: 'Nome Social', Ativo: false, referencia: 'nomeSocial' },
         { Categoria: 'Data Nascimento', Ativo: false, referencia: 'dataNascimento' },
         { Categoria: 'Codigo da Agencia', Ativo: false, referencia: 'codigoAgencia' },
-      ]);
+      ])
 
     type Filtro = {
-        Categoria: string;
-        Ativo: boolean;
-        referencia: string;
-    };
+        Categoria: string
+        Ativo: boolean
+        referencia: string
+    }
 
-    React.useEffect(() => {
+    useEffect(() => {
         const buscarCSV = async () => {
             try{
-                const response = await fetch(`/data/Clientes.csv?t=${Date.now()}`);
-                if (!response.ok) throw new Error("Erro na requisição");
-                const texto = await response.text();
+                const response = await fetch(`/data/Clientes.csv?t=${Date.now()}`)
+                if (!response.ok) throw new Error("Erro na requisição")
+                const texto = await response.text()
                 const parsed = Papa.parse(texto, {
                     header: true,
                     skipEmptyLines: true,
-                });
-                setdados(parsed.data as Record<string, string>[]);
+                })
+                if( dados !== parsed.data ){
+                    setdados(parsed.data as Cliente[])
+                }
             } catch(error){
                 throw Error
             }
-        };
-        buscarCSV();
-     //   const intervalo = setInterval(buscarCSV, 5000); 
-     //   return () => clearInterval(intervalo);
-    }, []);
+        }
+        buscarCSV()
+        setintervalo(setInterval(buscarCSV, 5000)) 
+    }, [])
+
+    useEffect(() => {
+        const filtrador = searchParams.get('filtrador')
+        const ResultadoDoFiltrador = searchParams.get('ResultadoDoFiltrador')
+        const paginas = searchParams.get('paginas')
+        if(filtrador !== null){
+            setfiltrador(filtrador)
+        }
+        if(ResultadoDoFiltrador !== null){
+            setResultadoDoFiltrador(ResultadoDoFiltrador)
+        }
+        if(paginas !== null){
+            setPages(parseInt(paginas))
+        }
+    }, [searchParams])
     
-    React.useEffect(()=>{
+    useEffect(()=>{
 
         const aplicarFiltro = () => {
             setSearchParams({
               filtrador: `${filtrador}`,
               ResultadoDoFiltrador: `${ResultadoDoFiltrador}`,
               paginas: `${pages}`
-            });
-          };
+            })
+          }
 
         aplicarFiltro()
     }, [Filtros, ResultadoDoFiltrador, filtrador, pages])
-
-    React.useEffect(() => {
-        console.log(dados); // Agora será chamado quando `dados` for atualizado
-    }, [dados]);
 
     const RestornarTabela = () => {
         if(dados == undefined){
@@ -79,31 +109,34 @@ export default function Homepage(){
             { Categoria: 'Nome', Ativo: true, referencia: 'nome' },
             { Categoria: 'email', Ativo: true, referencia: 'email' },
             ...Filtros
-          ];
+          ]
         if (ResultadoDoFiltrador !== '') {
             switch (filtrador) {
                 case 'Nome':
                     return(
                     dados.filter((item) => item.nome.toLowerCase().includes(ResultadoDoFiltrador.toLowerCase()))).slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {
                         return(
-                        <tr onClick={() => n(`/Perfil/${dado.id}`)} key={dado.id}>
-                            {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia]}`}</td>})}
+                        <tr onClick={() => {clearInterval(intervalo)
+                                            n(`/Perfil/${dado.id}`)}} key={dado.id}>
+                            {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia as keyof Cliente]}`}</td>})}
                         </tr>
                     )})
                 case 'Cpf/Cnpj':
                     return(
                         dados.filter((item) => item.cpfCnpj.toLowerCase().includes(ResultadoDoFiltrador.toLowerCase()))).slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {
                             return(
-                            <tr onClick={() => n(`/Perfil/${dado.id}`)} key={dado.id}>
-                                {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia]}`}</td>})}
+                            <tr onClick={() => {clearInterval(intervalo)
+                                                n(`/Perfil/${dado.id}`)}} key={dado.id}>
+                                {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia as keyof Cliente]}`}</td>})}
                             </tr>
                         )})
             }
         } else {
             return(
                 dados.slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {return(
-                    <tr onClick={() => n(`/Perfil/${dado.id}`)} key={dado.id}>
-                        {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia]}`}</td>})}
+                    <tr onClick={() => {clearInterval(intervalo)
+                                        n(`/Perfil/${dado.id}`)}} key={dado.id}>
+                        {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia as keyof Cliente]}`}</td>})}
                     </tr>
                 )})
         )}
@@ -134,12 +167,12 @@ export default function Homepage(){
                         <Form id='filtros' className='w-100 p-t text-center p-3'>
                             {Filtros.map((Categoria: Filtro, index: number)=> (
                             <Dropdown.Item onClick={()=>{
-                                const novosFiltros = [...Filtros];
+                                const novosFiltros = [...Filtros]
                                 novosFiltros[index] = {
                                     ...novosFiltros[index],
                                     Ativo: !novosFiltros[index].Ativo,
-                                };
-                                setFiltros(novosFiltros);
+                                }
+                                setFiltros(novosFiltros)
                             }}>
                                 <Form.Check 
                                 type="switch"
@@ -166,7 +199,7 @@ export default function Homepage(){
                                 {Filtros.filter((f) => (f.Ativo)).map((f)=>{return <th key={f.Categoria}>{`${f.Categoria}`}</th>})}
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="corpoTabela">
                             <RestornarTabela/>
                         </tbody>
                     </Table>
