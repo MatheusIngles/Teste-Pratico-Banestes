@@ -228,7 +228,7 @@ export default function Perfil() {
                                 {contasCliente.map((conta, index) => (
                                 <tr key={index}>
                                     <td className='th'>{conta.tipo}</td>
-                                    <td className='th'>R$ {conta.saldo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                                    <td className='th'>{!conta.saldo.toString().includes("R$") && "R$ "}{conta.saldo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
                                     <td className='th'>{conta.limiteCredito}</td>
                                     <td className='th'>{conta.creditoDisponivel} </td>
                                 </tr>

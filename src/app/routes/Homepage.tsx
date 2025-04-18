@@ -200,7 +200,9 @@ export default function Homepage() {
                                 <Form id='filtros' className='w-100 p-t text-center p-3'>
                                     {Filtros.map((Categoria: Filtro, index: number) => (
                                         <Dropdown.Item
-                                            onClick={() => {
+                                            onClick={(e) => {
+                                                e.preventDefault(); 
+                                                e.stopPropagation();
                                                 const novosFiltros = [...Filtros];
                                                 novosFiltros[index] = {
                                                     ...novosFiltros[index],
