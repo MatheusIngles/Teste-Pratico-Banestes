@@ -29,7 +29,7 @@ A aplicação deve consumir dados de uma planilha e permitir:
 
 ## 📄 Github Pages
 Caso queira testar apenas acesse o github pages do projeto:
-[Aqui]()
+[Aqui](https://matheusingles.github.io/Teste-Pratico-Banestes/)
 
 ## 🔧 Preparação do Ambiente (Caso queira rodar)
 
