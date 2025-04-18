@@ -54,7 +54,7 @@ export default function Homepage(){
     useEffect(() => {
         const buscarCSV = async () => {
             try{
-                const response = await fetch(`/data/Clientes.csv?t=${Date.now()}`)
+                const response = await fetch(`./data/Clientes.csv?t=${Date.now()}`)
                 if (!response.ok) throw new Error("Erro na requisição")
                 const texto = await response.text()
                 const parsed = Papa.parse(texto, {
@@ -132,7 +132,7 @@ export default function Homepage(){
                     return(
                         dadosFiltrados.slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {
                         return(
-                        <tr className='tr' onClick={() =>  n(`/Perfil/${dado.id}`)} key={dado.id}>
+                        <tr className='tr' onClick={() =>  n(`./Perfil/${dado.id}`)} key={dado.id}>
                             {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia as keyof Cliente]}`}</td>})}
                         </tr>
                     )}))
@@ -140,7 +140,7 @@ export default function Homepage(){
                     return(
                         dadosFiltrados.slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {
                             return(
-                            <tr className='tr' onClick={() => n(`/Perfil/${dado.id}`)} key={dado.id}>
+                            <tr className='tr' onClick={() => n(`./Perfil/${dado.id}`)} key={dado.id}>
                                 {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia as keyof Cliente]}`}</td>})}
                             </tr>
                         )}))
@@ -148,7 +148,7 @@ export default function Homepage(){
         } else {
             return(
                 dadosFiltrados.slice((pages -1) * 10,((pages -1) * 10) + 10).map((dado) => {return(
-                    <tr className='tr' onClick={() => n(`/Perfil/${dado.id}`)} key={dado.id}>
+                    <tr className='tr' onClick={() => n(`./Perfil/${dado.id}`)} key={dado.id}>
                         {TodosOsFiltros.filter((f) => (f.Ativo)).map((f)=>{return <td className='p-3' key={`${dado.id}+${f.referencia}`}>{`${dado[f.referencia as keyof Cliente]}`}</td>})}
                     </tr>
                 )})

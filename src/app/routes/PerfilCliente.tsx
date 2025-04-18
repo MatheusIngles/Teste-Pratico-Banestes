@@ -51,7 +51,7 @@ export default function Perfil() {
     useEffect(() => {
         const buscarCSV = async () => {
             try {
-                const response = await fetch(`/data/Clientes.csv?t=${Date.now()}`)
+                const response = await fetch(`${import.meta.env.BASE_URL}/data/Clientes.csv?t=${Date.now()}`)
                 if (!response.ok) 
                     throw new Error("Erro na requisição")
                 const texto = await response.text()
@@ -73,7 +73,7 @@ export default function Perfil() {
     useEffect(() => {
         const buscarAgencias = async () => {
             try {
-                const response = await fetch(`/data/Agencias.csv?t=${Date.now()}`)
+                const response = await fetch(`${import.meta.env.BASE_URL}/data/Agencias.csv?t=${Date.now()}`)
                 if (!response.ok) 
                     throw new Error("Erro na requisição")
                 const texto = await response.text()
@@ -93,7 +93,7 @@ export default function Perfil() {
     useEffect(() => {
         const buscarContas = async () => {
             try {
-                const response = await fetch(`/data/Contas.csv?t=${Date.now()}`)
+                const response = await fetch(`${import.meta.env.BASE_URL}/data/Contas.csv?t=${Date.now()}`)
                 if (!response.ok) 
                     throw new Error("Erro na requisição")
                 const texto = await response.text()
@@ -132,7 +132,7 @@ export default function Perfil() {
             setContasCliente(contasCliente);
         }
         if(leu && dados.find(c => c.id === id) === undefined){
-            n('404')
+            //n('404')
         }
     }, [dados, agencias, contas])
 
