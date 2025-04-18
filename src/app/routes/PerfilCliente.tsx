@@ -6,6 +6,7 @@ import './PerfilCliente.css'
 
 export default function Perfil() {
 
+    // Definição do tipo Conta, que representa informações bancárias do cliente
     type Conta = {
         id: string
         cpfCnpjCliente: string
@@ -15,6 +16,7 @@ export default function Perfil() {
         creditoDisponivel: number
     }
 
+    // Definição do tipo Agencia, que representa uma agência bancária
     type Agencia = {
         id: string
         codigo: number
@@ -22,6 +24,7 @@ export default function Perfil() {
         endereco: string
     }
 
+    // Definição do tipo Cliente, que representa os dados pessoais de um cliente
     type Cliente = {
         id: string
         cpfCnpj: string
@@ -37,39 +40,54 @@ export default function Perfil() {
         codigoAgencia: number
     }
 
+    // Obtém o id do cliente da URL
     const { id } = useParams<{ id: string}>()
+    // Função para navegação entre páginas
     const n = useNavigate()
+    // Estado que mantém os dados dos clientes
     const [dados, setdados] = useState<Array<Cliente>>([])
+    // Estado que mantém o cliente atual
     const [cliente, setcliente] = useState<Cliente>()
+    // Estado que controla a aba ativa na interface (contas ou agência)
     const [abaAtiva, setAbaAtiva] = useState("contas")
+    // Estado que mantém as agências
     const [agencias, setAgencias] = useState<Array<Agencia>>([])
+    // Estado que mantém a agência vinculada ao cliente
     const [AgenciaCliente, setAgenciaCliente] = useState<Agencia>();
+    // Estado que mantém as contas bancárias
     const [contas, setContas] = useState<Array<Conta>>([])
+    // Estado que indica se o CSV foi carregado
     const [leu, setleu] = useState<boolean>(false)
+    // Estado que mantém as contas vinculadas ao cliente
     const [contasCliente, setContasCliente] = useState<Array<Conta>>([]);
 
+    // Efeito colateral para buscar os dados do arquivo CSV de Clientes
     useEffect(() => {
         const buscarCSV = async () => {
             try {
+                // Requisição para buscar os dados do CSV de clientes
                 const response = await fetch(`${import.meta.env.BASE_URL}/data/Clientes.csv?t=${Date.now()}`)
                 if (!response.ok) 
                     throw new Error("Erro na requisição")
+                // Parse do CSV
                 const texto = await response.text()
                 const parsed = Papa.parse(texto, {
                     header: true,
                     skipEmptyLines: true,
                 })
-                    setdados(parsed.data as Cliente[])
-                    setleu(true)
+                    setdados(parsed.data as Cliente[])  // Armazena os dados no estado
+                    setleu(true)  // Marca que os dados foram carregados
             } catch (error) {
-                throw Error
+                throw Error  // Lida com erro de requisição
             }
         }
         buscarCSV()
+        // Recarrega os dados a cada 5 segundos
         const interval = setInterval(buscarCSV, 5000)
-        return () => clearInterval(interval)
+        return () => clearInterval(interval)  // Limpa o intervalo ao desmontar o componente
     }, [])
 
+    // Efeito colateral para buscar os dados do arquivo CSV de Agências
     useEffect(() => {
         const buscarAgencias = async () => {
             try {
@@ -81,15 +99,15 @@ export default function Perfil() {
                     header: true,
                     skipEmptyLines: true,
                 })
-                    setAgencias(parsed.data as Agencia[])
+                    setAgencias(parsed.data as Agencia[])  // Armazena os dados das agências
             } catch (error) {
-                throw Error
+                throw Error  // Lida com erro de requisição
             }
         }
-    
         buscarAgencias()
-    }, [dados])
+    }, [dados])  // Depende dos dados dos clientes, para garantir que as agências sejam carregadas após
 
+    // Efeito colateral para buscar os dados do arquivo CSV de Contas
     useEffect(() => {
         const buscarContas = async () => {
             try {
@@ -101,18 +119,16 @@ export default function Perfil() {
                     header: true,
                     skipEmptyLines: true
                 })  
-                    setContas(parsed.data as Conta[])
+                    setContas(parsed.data as Conta[])  // Armazena os dados das contas
             } catch (error) {
-                throw Error
+                throw Error  // Lida com erro de requisição
             }
         }
-    
         buscarContas()
-    }, [dados])
+    }, [dados])  // Depende dos dados dos clientes, para garantir que as contas sejam carregadas após
 
-    // caso o cpfCnpjCliente seja maior que 11, ele vai cortar os 11 primeiros caracteres
-    // Como tem dados que possuem CPF/CNPJ com mais de 11 caracteres
-    // Somente descomente isso para corrigir
+    // Efeito que ajustaria o CPF/CNPJ do cliente, caso seja maior que 11 caracteres
+    // Está comentado por enquanto, mas pode ser usado para corrigir a formatação do CPF/CNPJ
     // useEffect(() => {
     //     contas.forEach(c => {
     //         if (c.cpfCnpjCliente.length> 11) {
@@ -121,24 +137,26 @@ export default function Perfil() {
     //     })
     // }, [contas])
 
+    // Efeito que busca o cliente, a agência e as contas vinculadas ao cliente com base no id da URL
     useEffect(() => {
         if (!dados || !agencias || !contas || !id) return;
-        const cli = dados.find(c => c.id === id);
-        setcliente(cli);
+        const cli = dados.find(c => c.id === id);  // Encontra o cliente pelo id
+        setcliente(cli);  // Atualiza o estado do cliente
         if (cli) {
-            const ag = agencias.find(a => a.codigo === cli.codigoAgencia);
-            setAgenciaCliente(ag);
-            const contasCliente = contas.filter(c => c.cpfCnpjCliente === cli.cpfCnpj);
-            setContasCliente(contasCliente);
+            const ag = agencias.find(a => a.codigo === cli.codigoAgencia);  // Encontra a agência do cliente
+            setAgenciaCliente(ag);  // Atualiza o estado da agência do cliente
+            const contasCliente = contas.filter(c => c.cpfCnpjCliente === cli.cpfCnpj);  // Filtra as contas do cliente
+            setContasCliente(contasCliente);  // Atualiza o estado das contas do cliente
         }
         if(leu && dados.find(c => c.id === id) === undefined){
-            //n('404')
+            //n('404')  // Caso não encontre o cliente, poderia redirecionar para uma página 404
         }
-    }, [dados, agencias, contas])
+    }, [dados, agencias, contas])  // Depende de dados, agências e contas
 
+    // Função para renderizar os dados do cliente
     const Tela = () =>{
         if(cliente == undefined){
-            return null
+            return null  // Caso o cliente não seja encontrado, não renderiza nada
         }
         return (
         <div className="d-flex align-items-center justify-content-center w-100 h-100">
@@ -158,7 +176,7 @@ export default function Perfil() {
             </Col>
             </Row>
 
-
+                {/* Exibe um card com as informações do cliente */}
                 <Card  text="black" className="mb-2">
                     <Card.Header>Informações Pessoais</Card.Header>
                     <Card.Body>
@@ -181,6 +199,7 @@ export default function Perfil() {
                     </Card.Body>
                 </Card>
 
+                {/* Contêiner de abas para alternar entre informações de contas e agência */}
                 <Tab.Container activeKey={abaAtiva} onSelect={(k) => setAbaAtiva(k || "contas")}>
                     <Nav variant="tabs" className="mb-3 rounded">
                     <Nav.Item>
@@ -192,6 +211,7 @@ export default function Perfil() {
                     </Nav>
 
                     <Tab.Content>
+                    {/* Aba de contas bancárias */}
                     <Tab.Pane eventKey="contas">
                         { contasCliente.length !== 0 && <Card bg="white" text="black">
                         <Card.Body>
@@ -225,6 +245,7 @@ export default function Perfil() {
                             </Card>}
                     </Tab.Pane>
 
+                    {/* Aba da agência vinculada ao cliente */}
                     <Tab.Pane eventKey="agencia">
                         {AgenciaCliente !== undefined && <Card bg="white" text="black">
                         <Card.Body>
