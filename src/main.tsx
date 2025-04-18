@@ -10,7 +10,7 @@ import App from './app/App'
 
 const router = createBrowserRouter([
   {
-    path: "/Teste-Pratico-Banestes/",
+    path: "/",
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
