@@ -18,7 +18,9 @@ const router = createBrowserRouter([
       { path: "Perfil/:id", element: <Perfil />},
     ],
   },
-]);
+],{
+  basename: '/Teste-Pratico-Banestes/'
+});
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
