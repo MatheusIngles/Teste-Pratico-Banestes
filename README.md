@@ -57,7 +57,7 @@ Caso queira testar apenas acesse o github pages do projeto:
 
 Abaixo está a explicação da função de cada pasta e arquivo relevante no projeto:
 
-### 📁 `dist/`
+### 📁 `gh-pages`
 Para poder renderizar de forma rapida no github pages
 
 ### 📁 `public/`
