@@ -27,11 +27,11 @@ footer{
 .list-group-item{
     text-align: center;
     display: flex;
-    color: #004b8c;
+    color: #0070ba;
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    background-color: #e9e9e9;
+    background-color: #d7dfea;
     width: 25%;
     border-top: 0;
     border-bottom: 0;

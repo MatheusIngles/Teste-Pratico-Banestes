@@ -16,7 +16,7 @@
 }
 
 .tbody tr .th:first-child{
-    border-right: 1px solid #004b8c;
+  border-right: 2px solid #004b8c;
 }
 
 .tbody tr .th:last-child{

@@ -65,7 +65,7 @@ export default function Homepage() {
                 if (!response.ok) throw new Error("Erro na requisição");
                 const texto = await response.text();
                 const parsed = Papa.parse(texto, { header: true, skipEmptyLines: true });
-                if (dados !== parsed.data) {
+                if (!(dados === parsed.data)) {
                     setdados(parsed.data as Cliente[]);
                 }
             } catch (error) {

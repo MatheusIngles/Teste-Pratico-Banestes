@@ -75,7 +75,9 @@ export default function Perfil() {
                     header: true,
                     skipEmptyLines: true,
                 })
-                    setdados(parsed.data as Cliente[])  // Armazena os dados no estado
+                    if(!(dados === parsed.data as Cliente[])){
+                        setdados(parsed.data as Cliente[])  // Armazena os dados no estado
+                    }
                     setleu(true)  // Marca que os dados foram carregados
             } catch (error) {
                 throw Error  // Lida com erro de requisição
@@ -99,7 +101,9 @@ export default function Perfil() {
                     header: true,
                     skipEmptyLines: true,
                 })
-                    setAgencias(parsed.data as Agencia[])  // Armazena os dados das agências
+                    if(!(agencias === parsed.data as Agencia[])){
+                        setAgencias(parsed.data as Agencia[])  // Armazena os dados das agências
+                    }
             } catch (error) {
                 throw Error  // Lida com erro de requisição
             }
@@ -119,7 +123,9 @@ export default function Perfil() {
                     header: true,
                     skipEmptyLines: true
                 })  
-                    setContas(parsed.data as Conta[])  // Armazena os dados das contas
+                    if(!(contas === parsed.data as Conta[])){
+                        setContas(parsed.data as Conta[])  // Armazena os dados das contas
+                    }
             } catch (error) {
                 throw Error  // Lida com erro de requisição
             }
