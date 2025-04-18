@@ -41,6 +41,7 @@ export default function Perfil() {
     const n = useNavigate()
     const [dados, setdados] = useState<Array<Cliente>>([])
     const [cliente, setcliente] = useState<Cliente>()
+    const [abaAtiva, setAbaAtiva] = useState("contas")
     const [agencias, setAgencias] = useState<Array<Agencia>>([])
     const [AgenciaCliente, setAgenciaCliente] = useState<Agencia>();
     const [contas, setContas] = useState<Array<Conta>>([])
@@ -98,11 +99,9 @@ export default function Perfil() {
                 const texto = await response.text()
                 const parsed = Papa.parse(texto, {
                     header: true,
-                    skipEmptyLines: true,
-                })
-                if( contas !== parsed.data as Conta[] ){
+                    skipEmptyLines: true
+                })  
                     setContas(parsed.data as Conta[])
-                }
             } catch (error) {
                 throw Error
             }
@@ -110,6 +109,17 @@ export default function Perfil() {
     
         buscarContas()
     }, [dados])
+
+    // caso o cpfCnpjCliente seja maior que 11, ele vai cortar os 11 primeiros caracteres
+    // Como tem dados que possuem CPF/CNPJ com mais de 11 caracteres
+    // Somente descomente isso para corrigir
+    // useEffect(() => {
+    //     contas.forEach(c => {
+    //         if (c.cpfCnpjCliente.length> 11) {
+    //             c.cpfCnpjCliente = c.cpfCnpjCliente.slice(0, 11)
+    //         }
+    //     })
+    // }, [contas])
 
     useEffect(() => {
         if (!dados || !agencias || !contas || !id) return;
@@ -171,7 +181,7 @@ export default function Perfil() {
                     </Card.Body>
                 </Card>
 
-                <Tab.Container defaultActiveKey="contas">
+                <Tab.Container activeKey={abaAtiva} onSelect={(k) => setAbaAtiva(k || "contas")}>
                     <Nav variant="tabs" className="mb-3 rounded">
                     <Nav.Item>
                         <Nav.Link eventKey="contas">Contas Bancárias</Nav.Link>

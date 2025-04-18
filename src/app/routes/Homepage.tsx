@@ -114,7 +114,6 @@ export default function Homepage(){
             }
         } else {
             setdadosFiltrados(dados)
-            setPages(1)
         }
     }, [ResultadoDoFiltrador, dados])
     const RestornarTabela = () => {
